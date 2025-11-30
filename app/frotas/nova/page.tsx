@@ -1,33 +1,26 @@
-export default function NovaFrotaPage() {
+export default function NovaFrota() {
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-[#e11a24] mb-6">
-        Cadastrar Nova Frota
-      </h1>
+    <main className="p-8">
+      <h1 className="text-2xl font-bold">Cadastrar Nova Frota</h1>
 
-      <form className="bg-white shadow rounded p-6 w-full max-w-lg">
-        <label className="block mb-4">
-          <span className="text-gray-700">Código da Frota</span>
-          <input
-            type="text"
-            className="w-full border px-3 py-2 rounded mt-1"
-            placeholder="Ex: 1010"
-          />
-        </label>
+      <form className="mt-6 flex flex-col gap-4 max-w-lg">
+        <input
+          className="border p-2 rounded"
+          placeholder="Nome da Frota"
+        />
+        <input
+          className="border p-2 rounded"
+          placeholder="Placa"
+        />
+        <input
+          className="border p-2 rounded"
+          placeholder="Ano"
+        />
 
-        <label className="block mb-4">
-          <span className="text-gray-700">Status</span>
-          <select className="w-full border px-3 py-2 rounded mt-1">
-            <option>Ativo</option>
-            <option>Manutenção</option>
-            <option>Inativo</option>
-          </select>
-        </label>
-
-        <button className="bg-[#e11a24] text-white px-4 py-2 rounded hover:opacity-90">
-          Salvar Frota
+        <button className="bg-blue-600 text-white p-2 rounded">
+          Salvar
         </button>
       </form>
-    </div>
+    </main>
   );
 }
