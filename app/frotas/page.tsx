@@ -1,40 +1,69 @@
+"use client";
+
+import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 
-export const dynamic = "force-dynamic";
+export default function NovaFrotaPage() {
+  const router = useRouter();
 
-export default async function FrotasPage() {
-  const { data: frotas, error } = await supabase
-    .from("frotas")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const [form, setForm] = useState({
+    nome: "",
+    placa: "",
+    status: "ativo",
+  });
 
-  if (error) console.error(error);
+  const salvar = async () => {
+    const { error } = await supabase.from("frotas").insert({
+      nome: form.nome,
+      placa: form.placa,
+      status: form.status,
+    });
+
+    if (!error) {
+      alert("Frota cadastrada!");
+      router.push("/frotas");
+    } else {
+      alert("Erro: " + error.message);
+    }
+  };
 
   return (
     <main className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Frotas</h1>
+      <h1 className="text-3xl font-bold mb-6">Nova Frota</h1>
 
-      <a
-        href="/frotas/nova"
-        className="px-4 py-2 bg-green-600 text-white rounded"
-      >
-        Nova Frota
-      </a>
+      <div className="flex flex-col gap-4 max-w-md">
+        <input
+          placeholder="Nome da Frota"
+          className="border p-2 rounded"
+          value={form.nome}
+          onChange={(e) => setForm({ ...form, nome: e.target.value })}
+        />
 
-      <div className="mt-6 flex flex-col gap-4">
-        {frotas?.map((frota) => (
-          <a
-            key={frota.id}
-            href={`/frotas/${frota.id}`}
-            className="border p-4 rounded hover:bg-gray-100"
-          >
-            <h2 className="text-xl font-semibold">{frota.nome}</h2>
-            <p><strong>Placa:</strong> {frota.placa}</p>
-            <p><strong>Status:</strong> {frota.status}</p>
-          </a>
-        ))}
+        <input
+          placeholder="Placa"
+          className="border p-2 rounded"
+          value={form.placa}
+          onChange={(e) => setForm({ ...form, placa: e.target.value })}
+        />
+
+        <select
+          className="border p-2 rounded"
+          value={form.status}
+          onChange={(e) => setForm({ ...form, status: e.target.value })}
+        >
+          <option value="ativo">Ativo</option>
+          <option value="inativo">Inativo</option>
+          <option value="manutenção">Manutenção</option>
+        </select>
+
+        <button
+          onClick={salvar}
+          className="px-4 py-2 bg-green-600 text-white rounded"
+        >
+          Salvar
+        </button>
       </div>
     </main>
   );
 }
-
