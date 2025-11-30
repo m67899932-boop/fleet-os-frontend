@@ -20,15 +20,14 @@ export default async function FrotasPage() {
       </a>
 
       <div className="mt-6 flex flex-col gap-4">
-        {frotas?.map((f) => (
+        {frotas?.map((frota) => (
           <a
-            key={f.id}
-            href={`/frotas/${f.id}`}
+            key={frota.id}
+            href={`/frotas/${frota.id}`}
             className="border p-4 rounded hover:bg-gray-100"
           >
-            <h2 className="text-xl font-bold">{f.nome}</h2>
-            <p><strong>Placa:</strong> {f.placa}</p>
-            <p><strong>Status:</strong> {f.status}</p>
+            <h2 className="text-xl font-semibold">{frota.nome}</h2>
+            <p><strong>Status:</strong> {frota.status}</p>
           </a>
         ))}
       </div>
