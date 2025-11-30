@@ -1,12 +1,34 @@
-import { supabase } from "@/lib/supabase";
+"use client";
 
-export const dynamic = "force-dynamic";
+import { useEffect, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
 
-export default async function FrotasPage() {
-  const { data: frotas } = await supabase
-    .from("frotas")
-    .select("*")
-    .order("created_at", { ascending: false });
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+export default function FrotasPage() {
+  const [frotas, setFrotas] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      const { data, error } = await supabase
+        .from("frotas")
+        .select("*")
+        .order("created_at", { ascending: true });
+
+      if (error) console.error(error);
+      else setFrotas(data || []);
+
+      setLoading(false);
+    }
+
+    load();
+  }, []);
+
+  if (loading) return <p className="p-6">Carregando...</p>;
 
   return (
     <main className="p-8">
@@ -14,21 +36,19 @@ export default async function FrotasPage() {
 
       <a
         href="/frotas/nova"
-        className="px-4 py-2 bg-green-600 text-white rounded"
+        className="px-4 py-2 bg-blue-600 text-white rounded"
       >
         Nova Frota
       </a>
 
-      <div className="mt-6 flex flex-col gap-4">
-        {frotas?.map((frota) => (
-          <a
-            key={frota.id}
-            href={`/frotas/${frota.id}`}
-            className="border p-4 rounded hover:bg-gray-100"
-          >
-            <h2 className="text-xl font-semibold">{frota.nome}</h2>
+      <div className="mt-6 space-y-4">
+        {frotas.length === 0 && <p>Nenhuma frota encontrada.</p>}
+
+        {frotas.map((frota) => (
+          <div key={frota.id} className="p-4 border rounded">
+            <p><strong>Nome:</strong> {frota.nome}</p>
             <p><strong>Status:</strong> {frota.status}</p>
-          </a>
+          </div>
         ))}
       </div>
     </main>
